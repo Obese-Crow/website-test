@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dutch Auction</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.3/socket.io.js"></script>
+</head>
+<body>
+    <h1>Dutch Auction</h1>
+    <div>
+        Current Bid: <span id="currentBid">0</span>
+    </div>
+    <input type="number" id="bidInput" placeholder="Enter your bid">
+    <button id="bidButton">Place Bid</button>
+
+    <script>
+        const socket = io();
+        const currentBidElement = document.getElementById('currentBid');
+
+        socket.on('update_bid', (bid) => {
+            currentBidElement.textContent = bid;
+        });
+
+        document.getElementById('bidButton').onclick = () => {
+            const bid = parseInt(document.getElementById('bidInput').value);
+            if (!isNaN(bid)) {
+                socket.emit('new_bid', bid);
+                document.getElementById('bidInput').value = '';
+            }
+        };
+    </script>
+</body>
+</html>
